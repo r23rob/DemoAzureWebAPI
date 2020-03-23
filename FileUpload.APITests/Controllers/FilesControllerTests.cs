@@ -9,6 +9,8 @@ using System.Linq;
 using Moq;
 using FileUpload.API.Services;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace FileUpload.API.Controllers.Tests
 {
@@ -96,6 +98,49 @@ namespace FileUpload.API.Controllers.Tests
             // Asset
             var file = result.Value;
             Assert.IsNull(file);
+        }
+
+        [Test()]
+        public async Task Post_WithValidFile_ShouldReturnSuccess()
+        {
+            // Arrange
+            var mockFile = new Mock<IFormFile>();
+            var fileName = "test.pdf";
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes("test file"));
+            mockFile.Setup(x => x.OpenReadStream()).Returns(ms);
+            mockFile.Setup(x => x.FileName).Returns(fileName);
+            mockFile.Setup(x => x.Length).Returns(ms.Length);
+
+            mockFileService
+                .Setup(x => x.AddFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()))
+                .Returns(Task.FromResult(true));
+
+            // Act
+            var result = await controller.Post(mockFile.Object);
+
+            // Asset
+            Assert.IsInstanceOf<NoContentResult>(result);
+        }
+
+        [Test()]
+        public async Task Post_WithEmptyFile_ShouldReturnSuccess()
+        {
+            // Arrange
+            var mockFile = new Mock<IFormFile>();
+            var fileName = "test.pdf";
+            MemoryStream ms = null;
+            mockFile.Setup(x => x.OpenReadStream()).Returns(ms);
+            mockFile.Setup(x => x.FileName).Returns(fileName);
+
+            mockFileService
+                .Setup(x => x.AddFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()))
+                .Returns(Task.FromResult(true));
+
+            // Act
+            var result = await controller.Post(mockFile.Object);
+
+            // Asset
+            Assert.IsInstanceOf<NoContentResult>(result);
         }
     }
 }
