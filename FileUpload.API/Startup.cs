@@ -29,7 +29,7 @@ namespace FileUpload.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDatabaseContext(Configuration);
-            
+            services.AddFileService();
             services.AddControllers();
         }
 

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace FileUpload.API.Services
 {
-    public interface IFileUploadService
+    public interface IFileService
     {
         public Task AddFile(File file);
         public Task<IEnumerable<File>> ListFiles();

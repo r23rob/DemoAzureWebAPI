@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FileUpload.API.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,51 +13,41 @@ namespace FileUpload.API.Controllers
     [Route("[controller]")]
     public class FilesController : ControllerBase
     {
-        private static readonly List<File> FileList = new List<File>
-        {
-            new File()
-            {
-               FileId = 1,
-               FileName = "file1.zip",
-               CreatedDate = DateTime.Now,
-               MimeType = "application/zip"
-            },
-            new File()
-            {
-                FileId = 2,
-                FileName = "file2.zip",
-                CreatedDate = DateTime.Now,
-                MimeType = "application/zip"
-            },
-        };
-
+        
         private readonly ILogger<FilesController> logger;
+        private readonly IFileService fileService;
 
-        public FilesController(ILogger<FilesController> logger)
+        public FilesController(ILogger<FilesController> logger, IFileService fileService)
         {
             this.logger = logger;
+            this.fileService = fileService;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<File>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<File>>> Get()
         {
             logger.LogInformation($"{nameof(FilesController)}: - GET - List Files");
 
-            if (FileList?.Any() == true)
+            var fileList = await fileService.ListFiles();
+            if (fileList?.Any() == true)
             {
-                return FileList;
+                return fileList.ToList();
             }
 
             return NotFound($"No Files Found"); ;
         }
 
         [HttpGet("{fileID}")]
-        public ActionResult<File>Get(int fileID)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<File>> Get(int fileID)
         {
             logger.LogInformation($"{nameof(FilesController)}: - GET - Individual File");
 
-            var fileResult = FileList.FirstOrDefault(f => f.FileId == fileID);
-            if(fileResult != null)
+            var fileResult = await fileService.GetFile(fileID);
+            if (fileResult != null)
             {
                 return fileResult;
             }

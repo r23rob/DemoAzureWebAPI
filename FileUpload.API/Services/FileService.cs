@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FileUpload.API.Services
 {
-    public class FileService : IFileUploadService
+    public class FileService : IFileService
     {
 
         private readonly FilesDbContext filesDbContext;
