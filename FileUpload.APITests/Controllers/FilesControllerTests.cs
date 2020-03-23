@@ -71,7 +71,7 @@ namespace FileUpload.API.Controllers.Tests
                 .Returns(Task.FromResult(FileList.FirstOrDefault(x => x.FileId == fileId)));
 
             // Act
-            var result = await controller.Get(fileId);
+            var result = await controller.GetByID(fileId);
 
             // Asset
             var file = result.Value;
@@ -91,7 +91,7 @@ namespace FileUpload.API.Controllers.Tests
                 .Returns(Task.FromResult<File>(null));
 
             // Act
-            var result = await controller.Get(fileId);
+            var result = await controller.GetByID(fileId);
 
             // Asset
             var file = result.Value;

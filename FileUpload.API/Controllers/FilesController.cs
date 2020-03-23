@@ -16,12 +16,12 @@ namespace FileUpload.API.Controllers
     {
 
         private readonly ILogger<FilesController> logger;
-        private readonly IFileRepository fileRepository;
+        private readonly IFileService fileService;
 
-        public FilesController(ILogger<FilesController> logger, IFileRepository fileRepository)
+        public FilesController(ILogger<FilesController> logger, IFileService fileService)
         {
             this.logger = logger;
-            this.fileRepository = fileRepository;
+            this.fileService = fileService;
         }
 
         [HttpGet]
@@ -29,31 +29,20 @@ namespace FileUpload.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<File>>> Get()
         {
-            logger.LogInformation($"{nameof(FilesController)}: - GET - List Files");
+            logger.LogInformation($"{nameof(FilesController)}: -  Request Type:GET, Request:{nameof(Get)}");
 
-            var fileList = await fileRepository.GetAllFiles();
-            if (fileList?.Any() == true)
-            {
-                return fileList.ToList();
-            }
-
-            return NotFound($"No Files Found"); ;
+            var result = await fileService.ListFiles();
+            return result.ToList();
         }
 
         [HttpGet("{fileID}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<File>> Get(int fileID)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<File>> GetByID(int fileID)
         {
-            logger.LogInformation($"{nameof(FilesController)}: - GET - Individual File");
-
-            var fileResult = await fileRepository.GetFileById(fileID);
-            if (fileResult != null)
-            {
-                return fileResult;
-            }
-
-            return NotFound($"Unable to find a file with FileId={fileID}");
+            logger.LogInformation($"{nameof(FilesController)}: -  Request Type:GET, Request:{nameof(GetByID)}");
+            return await fileService.GetFile(fileID);
         }
     }
 }

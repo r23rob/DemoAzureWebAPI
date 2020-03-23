@@ -1,11 +1,8 @@
-﻿using FileUpload.API.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using FileUpload.API.Core.Exceptions;
 
 namespace FileUpload.API.Services
 {
@@ -24,7 +21,7 @@ namespace FileUpload.API.Services
         {
             if(file == null)
             {
-                throw new ArgumentException($"{nameof(File)} cannot be null");
+                throw new BadRequestException($"{nameof(File)} cannot be null");
             }
 
             // ToDo Upload File Azure
@@ -37,14 +34,25 @@ namespace FileUpload.API.Services
         public async Task<IEnumerable<File>> ListFiles()
         {
             // ToDo Add Paging/Limit results
-            return await fileRepository.GetAllFiles();
+            var fileListResult = await fileRepository.GetAllFiles();
+            if (fileListResult == null)
+            {
+                throw new NotFoundException($"Unable to find any files");
+            }
+
+            return fileListResult;
         }
 
         public async Task<File> GetFile(int fileId)
         {
             //ToDo Get File From Azure
+            var fileResult =  await fileRepository.GetFileById(fileId);
+            if (fileResult == null)
+            {
+                throw new NotFoundException($"Unable to find file matching FileId:{fileId}");
+            }
 
-            return await fileRepository.GetFileById(fileId);
+            return fileResult;
         }
 
     }
