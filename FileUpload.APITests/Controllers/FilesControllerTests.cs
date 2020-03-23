@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using FileUpload.API.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Text;
