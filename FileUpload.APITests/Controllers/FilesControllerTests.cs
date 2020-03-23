@@ -6,6 +6,9 @@ using System.Text;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using Moq;
+using FileUpload.API.Services;
+using System.Threading.Tasks;
 
 namespace FileUpload.API.Controllers.Tests
 {
@@ -13,18 +16,44 @@ namespace FileUpload.API.Controllers.Tests
     public class FilesControllerTests
     {
         FilesController controller;
+        Mock<IFileService> mockFileUploadService;
+
+        private static readonly IEnumerable<File> FileList = new List<File>
+        {
+            new File()
+            {
+               FileId = 1,
+               FileName = "file1.zip",
+               CreatedDate = DateTime.Now,
+               MimeType = "application/zip"
+            },
+            new File()
+            {
+                FileId = 2,
+                FileName = "file2.zip",
+                CreatedDate = DateTime.Now,
+                MimeType = "application/zip"
+            },
+        };
 
         [SetUp]
         public void Setup()
         {
-            controller = new FilesController(new NullLogger<FilesController>());
+            mockFileUploadService = new Mock<IFileService>();
+            controller = new FilesController(new NullLogger<FilesController>(), mockFileUploadService.Object);
+
         }
 
         [Test()]
-        public void Get_WhenCalled_Returns_FileList()
+        public async Task Get_WhenCalled_Returns_FileList()
         {
+            //Arange
+            mockFileUploadService
+                .Setup(x => x.ListFiles())
+                .Returns(Task.FromResult(FileList));
+            
             // Act
-            var result = controller.Get();
+            var result = await controller.Get();
 
             // Asset
             var fileList = result.Value;
@@ -33,13 +62,16 @@ namespace FileUpload.API.Controllers.Tests
         }
 
         [Test()]
-        public void GetById_WithValidId_ShouldReturnFile()
+        public async Task GetById_WithValidId_ShouldReturnFile()
         {
             // Arrange
             int fileId = 2;
+            mockFileUploadService
+                .Setup(x => x.GetFile(It.IsAny<int>()))
+                .Returns(Task.FromResult(FileList.FirstOrDefault(x => x.FileId == fileId)));
 
             // Act
-            var result = controller.Get(fileId);
+            var result = await controller.Get(fileId);
 
             // Asset
             var file = result.Value;
@@ -49,13 +81,17 @@ namespace FileUpload.API.Controllers.Tests
         }
 
         [Test()]
-        public void GetById_WithInvalidId_ShouldReturnNotFound()
+        public async Task GetById_WithInvalidId_ShouldReturnNotFound()
         {
             // Arrange
             int fileId = 3;
+            
+            mockFileUploadService
+                .Setup(x => x.GetFile(It.IsAny<int>()))
+                .Returns(Task.FromResult<File>(null));
 
             // Act
-            var result = controller.Get(fileId);
+            var result = await controller.Get(fileId);
 
             // Asset
             var file = result.Value;
