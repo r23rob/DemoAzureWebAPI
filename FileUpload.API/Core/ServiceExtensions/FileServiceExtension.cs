@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FileUpload.API.Core.ServiceExtensions
 {
-    public static class FileServiceCollectionExtensions
+    public static class FileServiceExtension
     {
         public static IServiceCollection AddFileService(this IServiceCollection services)
         {
