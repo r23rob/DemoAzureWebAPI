@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FileUpload.API.Core.Exceptions;
+using System.IO;
 
 namespace FileUpload.API.Services
 {
@@ -17,15 +18,29 @@ namespace FileUpload.API.Services
             this.fileRepository = fileRepository;
         }
 
-        public async Task<bool> AddFile(File file)
+        public async Task<bool> AddFile(string fileName, string mimeType, Stream stream)
         {
-            if(file == null)
+            //Use Fluent Validation
+            if(string.IsNullOrWhiteSpace(fileName))
             {
-                throw new BadRequestException($"{nameof(File)} cannot be null");
+                throw new BadRequestException($"{nameof(fileName)} cannot be null");
             }
 
-            // ToDo Upload File Azure
-            
+            if (string.IsNullOrWhiteSpace(mimeType))
+            {
+                throw new BadRequestException($"{nameof(mimeType)} cannot be null");
+            }
+
+            if (!(stream?.Length > 0))
+            {
+                throw new BadRequestException($"{nameof(stream)} cannot be null");
+            }
+
+            var file = new File(fileName, mimeType);
+
+            // ToDo Upload File Azure stream
+
+
             // Save Data
             return await fileRepository.AddFile(file);
            

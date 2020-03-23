@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FileUpload.API.Core.Exceptions;
@@ -43,6 +44,23 @@ namespace FileUpload.API.Controllers
         {
             logger.LogInformation($"{nameof(FilesController)}: -  Request Type:GET, Request:{nameof(GetByID)}");
             return await fileService.GetFile(fileID);
+        }
+
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> Post(IFormFile formFile)
+        {
+            logger.LogInformation($"{nameof(FilesController)}: -  Request Type:GET, Request:{nameof(Post)}");
+
+            //Could cause alot of Memory usage use a temp file
+            using (var fileStream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(fileStream);
+                await fileService.AddFile(formFile.FileName, formFile.ContentType, fileStream);
+            }
+            
+            return NoContent();
         }
     }
 }

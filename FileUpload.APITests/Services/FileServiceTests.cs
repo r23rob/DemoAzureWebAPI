@@ -7,6 +7,8 @@ using Moq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Linq;
+using System.IO;
+using FileUpload.API.Core.Exceptions;
 
 namespace FileUpload.API.Services.Tests
 {
@@ -50,17 +52,35 @@ namespace FileUpload.API.Services.Tests
                 .Setup(x => x.AddFile(It.IsAny<File>()))
                 .Returns(Task.FromResult(true));
             
-            var fileToAdd = new File()
-            {
-                FileId = 2,
-                FileName = "filename.zip"
-            };
-            
             // Act
-            var result = await fileService.AddFile(fileToAdd);
+            var result = await fileService.AddFile("filename.zip", "application/zip", new MemoryStream(Encoding.UTF8.GetBytes("test file")));
 
             // Asset
             Assert.IsTrue(result);
+        }
+
+        [Test()]
+        public void AddFile_With_NullFileName_Should_ThrowArgumentException()
+        {
+            //Arange
+            mockFileRepository
+                .Setup(x => x.AddFile(It.IsAny<File>()))
+                .Returns(Task.FromResult(false));
+
+            // Act/Asset
+            Assert.ThrowsAsync<BadRequestException>(async () => await fileService.AddFile(null, "application/zip", new MemoryStream(Encoding.UTF8.GetBytes("test file"))));
+        }
+
+        [Test()]
+        public void AddFile_With_NullMimeType_Should_ThrowArgumentException()
+        {
+            //Arange
+            mockFileRepository
+                .Setup(x => x.AddFile(It.IsAny<File>()))
+                .Returns(Task.FromResult(false));
+
+            // Act/Asset
+            Assert.ThrowsAsync<BadRequestException>(async () => await fileService.AddFile(null, "application/zip", new MemoryStream(Encoding.UTF8.GetBytes("test file"))));
         }
 
         [Test()]
@@ -72,7 +92,7 @@ namespace FileUpload.API.Services.Tests
                 .Returns(Task.FromResult(false));
 
             // Act/Asset
-            Assert.ThrowsAsync<ArgumentException>(async () => await fileService.AddFile(null));
+            Assert.ThrowsAsync<BadRequestException>(async () => await fileService.AddFile("filename.zip", "application/zip", null));
         }
 
         [Test()]
@@ -110,7 +130,7 @@ namespace FileUpload.API.Services.Tests
         }
 
         [Test()]
-        public async Task GetFile_With_InvalidId_Should_ReturnFile()
+        public void GetFile_With_InvalidId_Should_ReturnFile()
         {
             // Arange
             int fileId = 3;
@@ -118,11 +138,8 @@ namespace FileUpload.API.Services.Tests
                 .Setup(x => x.GetFileById(It.IsAny<int>()))
                 .Returns(Task.FromResult(FileList.FirstOrDefault(x => x.FileId == fileId)));
 
-            // Act
-            var result = await fileService.GetFile(fileId);
-
-            // Asset
-            Assert.IsNull(result);
+            // Act/Asset
+            Assert.ThrowsAsync<NotFoundException>(async () => await fileService.GetFile(fileId));
         }
     }
 }
