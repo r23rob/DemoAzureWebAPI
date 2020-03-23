@@ -1,14 +1,14 @@
-This demo .Net Core WebAPI showing the basics of uploading and retrieving files onto Azure blob storage.
+This demo .Net Core WebAPI showing the basics of uploading and retrieving files into a SQL Database and into Azure blob storage(Work in Progress)
 
 **Technologies Demonstrated**
-.Net Core WebAPI
-Entity Framework Core SQL database
+* .Net Core WebAPI
+* Entity Framework Core SQL database
 
 
 **ToDo List**
-Swagger
-Fluent Validation
-Azure File Upload/Retrieval
+* Azure File Upload/Retrieval
+* Swagger documentaion
+* Fluent Validation
 
 
 **API Examples**
