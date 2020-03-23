@@ -16,7 +16,7 @@ namespace FileUpload.API.Controllers.Tests
     public class FilesControllerTests
     {
         FilesController controller;
-        Mock<IFileService> mockFileUploadService;
+        Mock<IFileRepository> mockFileRepository;
 
         private static readonly IEnumerable<File> FileList = new List<File>
         {
@@ -39,8 +39,8 @@ namespace FileUpload.API.Controllers.Tests
         [SetUp]
         public void Setup()
         {
-            mockFileUploadService = new Mock<IFileService>();
-            controller = new FilesController(new NullLogger<FilesController>(), mockFileUploadService.Object);
+            mockFileRepository = new Mock<IFileRepository>();
+            controller = new FilesController(new NullLogger<FilesController>(), mockFileRepository.Object);
 
         }
 
@@ -48,8 +48,8 @@ namespace FileUpload.API.Controllers.Tests
         public async Task Get_WhenCalled_Returns_FileList()
         {
             //Arange
-            mockFileUploadService
-                .Setup(x => x.ListFiles())
+            mockFileRepository
+                .Setup(x => x.GetAllFiles())
                 .Returns(Task.FromResult(FileList));
             
             // Act
@@ -66,8 +66,8 @@ namespace FileUpload.API.Controllers.Tests
         {
             // Arrange
             int fileId = 2;
-            mockFileUploadService
-                .Setup(x => x.GetFile(It.IsAny<int>()))
+            mockFileRepository
+                .Setup(x => x.GetFileById(It.IsAny<int>()))
                 .Returns(Task.FromResult(FileList.FirstOrDefault(x => x.FileId == fileId)));
 
             // Act
@@ -86,8 +86,8 @@ namespace FileUpload.API.Controllers.Tests
             // Arrange
             int fileId = 3;
             
-            mockFileUploadService
-                .Setup(x => x.GetFile(It.IsAny<int>()))
+            mockFileRepository
+                .Setup(x => x.GetFileById(It.IsAny<int>()))
                 .Returns(Task.FromResult<File>(null));
 
             // Act

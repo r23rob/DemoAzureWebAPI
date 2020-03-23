@@ -15,12 +15,12 @@ namespace FileUpload.API.Controllers
     {
         
         private readonly ILogger<FilesController> logger;
-        private readonly IFileService fileService;
+        private readonly IFileRepository fileRepository;
 
-        public FilesController(ILogger<FilesController> logger, IFileService fileService)
+        public FilesController(ILogger<FilesController> logger, IFileRepository fileRepository)
         {
             this.logger = logger;
-            this.fileService = fileService;
+            this.fileRepository = fileRepository;
         }
 
         [HttpGet]
@@ -30,7 +30,7 @@ namespace FileUpload.API.Controllers
         {
             logger.LogInformation($"{nameof(FilesController)}: - GET - List Files");
 
-            var fileList = await fileService.ListFiles();
+            var fileList = await fileRepository.GetAllFiles();
             if (fileList?.Any() == true)
             {
                 return fileList.ToList();
@@ -46,7 +46,7 @@ namespace FileUpload.API.Controllers
         {
             logger.LogInformation($"{nameof(FilesController)}: - GET - Individual File");
 
-            var fileResult = await fileService.GetFile(fileID);
+            var fileResult = await fileRepository.GetFileById(fileID);
             if (fileResult != null)
             {
                 return fileResult;
