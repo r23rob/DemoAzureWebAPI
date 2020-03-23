@@ -5,7 +5,7 @@ namespace FileUpload.API.Services
 {
     public interface IFileRepository
     {
-        Task AddFile(File file);
+        Task<bool> AddFile(File file);
         Task<IEnumerable<File>> GetAllFiles();
         Task<File> GetFileById(int fileId);
     }

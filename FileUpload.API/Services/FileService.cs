@@ -1,5 +1,6 @@
 ﻿using FileUpload.API.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,21 +11,27 @@ namespace FileUpload.API.Services
 {
     public class FileService : IFileService
     {
-
+        private readonly ILogger<FileService> logger;
         private readonly IFileRepository fileRepository;
 
-        public FileService(IFileRepository fileRepository)
+        public FileService(ILogger<FileService> logger, IFileRepository fileRepository)
         {
+            this.logger = logger;
             this.fileRepository = fileRepository;
         }
 
-        public async Task AddFile(File file)
+        public async Task<bool> AddFile(File file)
         {
+            if(file == null)
+            {
+                throw new ArgumentException($"{nameof(File)} cannot be null");
+            }
+
             // ToDo Upload File Azure
-
-
+            
             // Save Data
-            await fileRepository.AddFile(file);
+            return await fileRepository.AddFile(file);
+           
         }
 
         public async Task<IEnumerable<File>> ListFiles()
