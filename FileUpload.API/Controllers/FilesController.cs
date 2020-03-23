@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FileUpload.API.Core.Exceptions;
 using FileUpload.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace FileUpload.API.Controllers
     [Route("[controller]")]
     public class FilesController : ControllerBase
     {
-        
+
         private readonly ILogger<FilesController> logger;
         private readonly IFileRepository fileRepository;
 
@@ -51,9 +52,8 @@ namespace FileUpload.API.Controllers
             {
                 return fileResult;
             }
-            
+
             return NotFound($"Unable to find a file with FileId={fileID}");
         }
-
     }
 }
