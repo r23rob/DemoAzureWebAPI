@@ -59,7 +59,6 @@ namespace FileUpload.API.Controllers.Tests
 
             // Asset
             var file = result.Value;
-            Assert.IsInstanceOf<File>(file);
             Assert.IsNull(file);
         }
     }
