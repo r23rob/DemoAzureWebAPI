@@ -36,8 +36,7 @@ namespace FileUpload.API.Services
                 return false;
             }
         }
-
-
+        
         public async Task<IEnumerable<File>> GetAllFiles()
         {
             // ToDo Add Paging/Limit results
