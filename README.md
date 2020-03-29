@@ -3,11 +3,11 @@ This demo .Net Core WebAPI showing the basics of uploading and retrieving files 
 **Technologies Demonstrated**
 * .Net Core WebAPI
 * Entity Framework Core SQL database
+* Swagger documentaion
 
 
 **ToDo List**
 * Azure File Upload/Retrieval
-* Swagger documentaion
 * Fluent Validation
 
 
