@@ -1,5 +1,4 @@
 using FileUpload.API.Core.ServiceExtensions;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +20,7 @@ namespace FileUpload.API
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddMvcCore()
+                .AddMvcCore();
 
             services.AddSwagger();
             services.AddDatabaseContext(Configuration);
