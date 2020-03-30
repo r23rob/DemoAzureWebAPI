@@ -1,4 +1,5 @@
 using FileUpload.API.Core.ServiceExtensions;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,9 @@ namespace FileUpload.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddMvcCore()
+
             services.AddSwagger();
             services.AddDatabaseContext(Configuration);
             services.AddFileService();
@@ -26,8 +30,10 @@ namespace FileUpload.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // Now used IWebHostEnvironment
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -40,14 +46,17 @@ namespace FileUpload.API
 
             app.UseHttpsRedirection();
 
+            // Changes the following in .Net core 3.0
             app.UseRouting();
 
-            app.UseAuthorization();
-
+            // Endpoint routing had changed
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            // Not longer used
+            // app.UseMvc();
         }
     }
 }
