@@ -47,7 +47,7 @@ namespace FileUpload.API.Services.Tests
         [Test()]
         public async Task AddFile_With_ValidFile_Should_ReturnTrue()
         {
-            //Arange
+            //Arrange
             mockFileRepository
                 .Setup(x => x.AddFile(It.IsAny<File>()))
                 .Returns(Task.FromResult(true));
@@ -62,19 +62,21 @@ namespace FileUpload.API.Services.Tests
         [Test()]
         public void AddFile_With_NullFileName_Should_ThrowArgumentException()
         {
-            //Arange
+            //Arrange
             mockFileRepository
                 .Setup(x => x.AddFile(It.IsAny<File>()))
                 .Returns(Task.FromResult(false));
 
             // Act/Asset
-            Assert.ThrowsAsync<BadRequestException>(async () => await fileService.AddFile(null, "application/zip", new MemoryStream(Encoding.UTF8.GetBytes("test file"))));
+            Assert.ThrowsAsync<BadRequestException>(
+                async () => await fileService.AddFile(null, "application/zip", new MemoryStream(Encoding.UTF8.GetBytes("test file")))
+                );
         }
 
         [Test()]
         public void AddFile_With_NullMimeType_Should_ThrowArgumentException()
         {
-            //Arange
+            //Arrange
             mockFileRepository
                 .Setup(x => x.AddFile(It.IsAny<File>()))
                 .Returns(Task.FromResult(false));
@@ -86,7 +88,7 @@ namespace FileUpload.API.Services.Tests
         [Test()]
         public void AddFile_With_NullFile_Should_ThrowArgumentException()
         {
-            //Arange
+            //Arrange
             mockFileRepository
                 .Setup(x => x.AddFile(It.IsAny<File>()))
                 .Returns(Task.FromResult(false));
@@ -98,7 +100,7 @@ namespace FileUpload.API.Services.Tests
         [Test()]
         public async Task ListFiles_Called_Should_Return()
         {
-            //Arange
+            //Arrange
             mockFileRepository
                 .Setup(x => x.GetAllFiles())
                 .Returns(Task.FromResult(FileList));
@@ -114,7 +116,7 @@ namespace FileUpload.API.Services.Tests
         [Test()]
         public async Task GetFile_With_ValidId_Should_ReturnFile()
         {
-            // Arange
+            // Arrange
             int fileId = 2;
             mockFileRepository
                 .Setup(x => x.GetFileById(It.IsAny<int>()))
@@ -132,7 +134,7 @@ namespace FileUpload.API.Services.Tests
         [Test()]
         public void GetFile_With_InvalidId_Should_ReturnFile()
         {
-            // Arange
+            // Arrange
             int fileId = 3;
             mockFileRepository
                 .Setup(x => x.GetFileById(It.IsAny<int>()))
