@@ -48,7 +48,7 @@ namespace FileUpload.API.Controllers.Tests
         [Test()]
         public async Task Get_WhenCalled_Returns_FileList()
         {
-            //Arange
+            //Arrange
             mockFileService
                 .Setup(x => x.ListFiles())
                 .Returns(Task.FromResult(FileList));
