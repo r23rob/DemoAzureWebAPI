@@ -19,8 +19,23 @@ namespace FileUpload.API.Services
 
         public async Task<bool> AddFile(string fileName, string mimeType, Stream stream)
         {
-            //Use Fluent Validation
-            if(string.IsNullOrWhiteSpace(fileName))
+            //TODO Use Fluent Validation
+            ValidateFile(fileName, mimeType, stream);
+
+            var file = new File(fileName, mimeType);
+
+            // TODO Upload File Azure stream
+
+            await SleepProcess();
+
+            // Save Data
+            return await fileRepository.AddFile(file);
+
+        }
+
+        private void ValidateFile(string fileName, string mimeType, Stream stream)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
             {
                 throw new BadRequestException($"{nameof(fileName)} cannot be null");
             }
@@ -34,15 +49,11 @@ namespace FileUpload.API.Services
             {
                 throw new BadRequestException($"{nameof(stream)} cannot be null");
             }
+        }
 
-            var file = new File(fileName, mimeType);
-
-            // ToDo Upload File Azure stream
-
-
-            // Save Data
-            return await fileRepository.AddFile(file);
-           
+        private async Task SleepProcess()
+        {
+            await Task.Delay(20000);
         }
 
         public async Task<IEnumerable<File>> ListFiles()
