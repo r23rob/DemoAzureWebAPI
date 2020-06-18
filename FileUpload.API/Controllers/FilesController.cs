@@ -26,7 +26,6 @@ namespace FileUpload.API.Controllers
         /// <summary>
         ///  Returns a List of all files that have been uploaded to Azure
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -41,8 +40,6 @@ namespace FileUpload.API.Controllers
         /// <summary>
         /// Returns the specified file as a download
         /// </summary>
-        /// <param name="fileID"></param>
-        /// <returns></returns>
         [HttpGet("{fileID}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -56,15 +53,13 @@ namespace FileUpload.API.Controllers
         /// <summary>
         /// Uploads a New File to Azure and stores the information in the DB
         /// </summary>
-        /// <param name="formFile"></param>
-        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Post(IFormFile formFile)
         {
             logger.LogInformation($"{nameof(FilesController)}: -  Request Type:GET, Request:{nameof(Post)}");
 
-            //ToDo Could cause alot of Memory usage use a temp file
+            // TODO Could cause alot of Memory usage use a temp file
             using (var fileStream = new MemoryStream())
             {
                 await formFile.CopyToAsync(fileStream);
