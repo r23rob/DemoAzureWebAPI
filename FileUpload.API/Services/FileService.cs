@@ -20,13 +20,13 @@ namespace FileUpload.API.Services
             this.fileRepository = fileRepository;
         }
 
-        public async Task<bool> AddFile(string fileName, string mimeType, Stream stream)
+        public async Task<bool> AddFile(string fn, string mt, Stream st)
         {
-            ValidateFile(fileName, mimeType, stream);
+            ValidateFile(fn, mt, st);
 
-            var file = new File(fileName, mimeType);
+            var file = new File(fn, mt);
 
-            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            using (StreamReader reader = new StreamReader(st, Encoding.UTF8))
             {
                 file.FileContent = reader.ReadToEnd();
             }
