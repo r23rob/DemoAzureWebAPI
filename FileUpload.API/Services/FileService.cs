@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FileUpload.API.Core.Exceptions;
 using System.IO;
+using System.Text;
 using FileUpload.API.Data;
 using File = FileUpload.API.Models.File;
 
@@ -24,6 +25,11 @@ namespace FileUpload.API.Services
             ValidateFile(fileName, mimeType, stream);
 
             var file = new File(fileName, mimeType);
+
+            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                file.FileContent = reader.ReadToEnd();
+            }
 
             // Save Data
             return await fileRepository.AddFile(file);
