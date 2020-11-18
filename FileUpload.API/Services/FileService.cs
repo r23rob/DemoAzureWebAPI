@@ -11,18 +11,31 @@ namespace FileUpload.API.Services
 {
     public class FileService : IFileService
     {
-        private readonly ILogger<FileService> logger;
-        private readonly IFileRepository fileRepository;
+        private readonly ILogger<FileService> log;
+        private readonly IFileRepository filerepo;
 
-        public FileService(ILogger<FileService> logger, IFileRepository fileRepository)
+        public FileService(ILogger<FileService> log, IFileRepository fr)
         {
-            this.logger = logger;
-            this.fileRepository = fileRepository;
+            this.log = log;
+            this.filerepo = fr;
         }
 
         public async Task<bool> AddFile(string fn, string mt, Stream st)
         {
-            ValidateFile(fn, mt, st);
+            if (string.IsNullOrWhiteSpace(fn))
+            {
+                throw new BadRequestException($"{nameof(fn)} cannot be null");
+            }
+
+            if (string.IsNullOrWhiteSpace(mt))
+            {
+                throw new BadRequestException($"{nameof(mt)} cannot be null");
+            }
+
+            if (!(st?.Length > 0))
+            {
+                throw new BadRequestException($"{nameof(st)} cannot be null");
+            }
 
             var file = new File(fn, mt);
 
@@ -32,31 +45,13 @@ namespace FileUpload.API.Services
             }
 
             // Save Data
-            return await fileRepository.AddFile(file);
+            return await filerepo.AddFile(file);
 
-        }
-
-        private void ValidateFile(string fileName, string mimeType, Stream stream)
-        {
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                throw new BadRequestException($"{nameof(fileName)} cannot be null");
-            }
-
-            if (string.IsNullOrWhiteSpace(mimeType))
-            {
-                throw new BadRequestException($"{nameof(mimeType)} cannot be null");
-            }
-
-            if (!(stream?.Length > 0))
-            {
-                throw new BadRequestException($"{nameof(stream)} cannot be null");
-            }
         }
 
         public async Task<IEnumerable<File>> ListFiles()
         {
-            var fileListResult = await fileRepository.GetAllFiles();
+            var fileListResult = await filerepo.GetAllFiles();
             if (fileListResult == null)
             {
                 throw new NotFoundException($"Unable to find any files");
@@ -65,12 +60,12 @@ namespace FileUpload.API.Services
             return fileListResult;
         }
 
-        public async Task<File> GetFile(int fileId)
+        public async Task<File> GetFile(int fId)
         {
-            var fileResult =  await fileRepository.GetFileById(fileId);
+            var fileResult =  await filerepo.GetFileById(fId);
             if (fileResult == null)
             {
-                throw new NotFoundException($"Unable to find file matching FileId:{fileId}");
+                throw new NotFoundException($"Unable to find file matching FileId:{fId}");
             }
 
             return fileResult;
