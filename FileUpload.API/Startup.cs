@@ -9,7 +9,7 @@ namespace FileUpload.API
 {
     public class Startup
     {
-        public const string db = @"Server=(localdb)\\mssqllocaldb;Database=FileUpload;Trusted_Connection=True;MultipleActiveResultSets=true";
+        public const string db = @"Server=(localdb)\mssqllocaldb;Database=FileUpload;Trusted_Connection=True;MultipleActiveResultSets=true";
 
         public Startup(IConfiguration configuration)
         {
