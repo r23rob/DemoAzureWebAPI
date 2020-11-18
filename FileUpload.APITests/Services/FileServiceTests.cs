@@ -1,16 +1,18 @@
-﻿using NUnit.Framework;
-using FileUpload.API.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Moq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging.Abstractions;
-using System.Linq;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using FileUpload.API.Core.Exceptions;
+using FileUpload.API.Data;
+using FileUpload.API.Services;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using NUnit.Framework;
+using File = FileUpload.API.Models.File;
 
-namespace FileUpload.API.Services.Tests
+namespace FileUpload.APITests.Services
 {
     [TestFixture()]
     public class FileServiceTests

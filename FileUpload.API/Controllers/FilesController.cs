@@ -6,6 +6,7 @@ using FileUpload.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using File = FileUpload.API.Models.File;
 
 namespace FileUpload.API.Controllers
 {
@@ -24,7 +25,7 @@ namespace FileUpload.API.Controllers
         }
 
         /// <summary>
-        ///  Returns a List of all files that have been uploaded to Azure
+        ///  Returns a List of all files that have been uploaded
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -38,7 +39,7 @@ namespace FileUpload.API.Controllers
         }
 
         /// <summary>
-        /// Returns the specified file as a download
+        /// Returns the specified file details
         /// </summary>
         [HttpGet("{fileID}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -51,7 +52,7 @@ namespace FileUpload.API.Controllers
         }
 
         /// <summary>
-        /// Uploads a New File to Azure and stores the information in the DB
+        /// Inserts a New File to the database
         /// </summary>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -59,7 +60,6 @@ namespace FileUpload.API.Controllers
         {
             logger.LogInformation($"{nameof(FilesController)}: -  Request Type:GET, Request:{nameof(Post)}");
 
-            // TODO Could cause alot of Memory usage use a temp file
             using (var fileStream = new MemoryStream())
             {
                 await formFile.CopyToAsync(fileStream);

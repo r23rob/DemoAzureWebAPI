@@ -1,6 +1,6 @@
 using System;
 
-namespace FileUpload.API
+namespace FileUpload.API.Models
 {
     public class File
     {

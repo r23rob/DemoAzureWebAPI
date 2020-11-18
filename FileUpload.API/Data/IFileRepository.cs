@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using FileUpload.API.Models;
 
-namespace FileUpload.API.Services
+namespace FileUpload.API.Data
 {
     public interface IFileRepository
     {

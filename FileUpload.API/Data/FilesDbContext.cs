@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using FileUpload.API.Models;
 
 namespace FileUpload.API.Data
 {

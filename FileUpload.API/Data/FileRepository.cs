@@ -1,13 +1,11 @@
-﻿using FileUpload.API.Data;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FileUpload.API.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using File = FileUpload.API.Models.File;
 
-namespace FileUpload.API.Services
+namespace FileUpload.API.Data
 {
     public class FileRepository : IFileRepository
     {
@@ -24,14 +22,12 @@ namespace FileUpload.API.Services
         {
             try
             {
-                // ToDo catch exception and log
                 filesDbContext.Files.Add(file);
                 await filesDbContext.SaveChangesAsync();
                 return true;
             }
             catch
             {
-                // Todo Log actual Exception/stack trace
                 logger.LogError($"Failed to Save {nameof(File)} to DB");
                 return false;
             }
@@ -39,7 +35,6 @@ namespace FileUpload.API.Services
         
         public async Task<IEnumerable<File>> GetAllFiles()
         {
-            // ToDo Add Paging/Limit results
             return await filesDbContext.Files.ToListAsync();
         }
 

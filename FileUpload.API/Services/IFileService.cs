@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using File = FileUpload.API.Models.File;
 
 namespace FileUpload.API.Services
 {

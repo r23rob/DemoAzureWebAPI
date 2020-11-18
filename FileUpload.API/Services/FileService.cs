@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FileUpload.API.Core.Exceptions;
 using System.IO;
+using FileUpload.API.Data;
+using File = FileUpload.API.Models.File;
 
 namespace FileUpload.API.Services
 {
@@ -19,14 +21,9 @@ namespace FileUpload.API.Services
 
         public async Task<bool> AddFile(string fileName, string mimeType, Stream stream)
         {
-            //TODO Use Fluent Validation
             ValidateFile(fileName, mimeType, stream);
 
             var file = new File(fileName, mimeType);
-
-            // TODO Upload File Azure stream
-
-            await SleepProcess();
 
             // Save Data
             return await fileRepository.AddFile(file);
@@ -51,14 +48,8 @@ namespace FileUpload.API.Services
             }
         }
 
-        private async Task SleepProcess()
-        {
-            await Task.Delay(20000);
-        }
-
         public async Task<IEnumerable<File>> ListFiles()
         {
-            // ToDo Add Paging/Limit results
             var fileListResult = await fileRepository.GetAllFiles();
             if (fileListResult == null)
             {
@@ -70,7 +61,6 @@ namespace FileUpload.API.Services
 
         public async Task<File> GetFile(int fileId)
         {
-            //ToDo Get File From Azure
             var fileResult =  await fileRepository.GetFileById(fileId);
             if (fileResult == null)
             {
