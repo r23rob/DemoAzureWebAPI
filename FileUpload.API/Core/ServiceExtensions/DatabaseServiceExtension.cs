@@ -8,10 +8,12 @@ namespace FileUpload.API.Core.ServiceExtensions
 {
     public static class DatabaseServiceExtension
     {
-        public static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
+        
+
+        public static IServiceCollection AddDatabaseContext(this IServiceCollection services, string databaseConnectionString)
         {
             services.AddDbContext<FilesDbContext>(options =>
-               options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+               options.UseSqlServer(databaseConnectionString));
 
             services.AddTransient<IFileRepository, FileRepository>();
 
